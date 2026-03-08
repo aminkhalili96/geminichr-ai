@@ -1,26 +1,312 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Colors - Anthropic warm editorial palette */
+    --bg-primary: #FAF9F5;
+    --bg-secondary: #FFFFFF;
+    --bg-tertiary: #F5F4ED;
+    --bg-hover: #EEEDE6;
+    --bg-white: #FFFFFF;
+
+    /* Sidebar - warm dark tone */
+    --sidebar-bg: #1B1B18;
+    --sidebar-hover: #2A2A26;
+    --sidebar-active: rgba(191, 144, 60, 0.12);
+    --sidebar-text: rgba(255, 255, 255, 0.55);
+    --sidebar-text-active: #FFFFFF;
+    --sidebar-width: 240px;
+    --sidebar-collapsed-width: 64px;
+    --sidebar-border: rgba(255, 255, 255, 0.08);
+
+    /* Text colors - Anthropic off-black warm tones */
+    --text-primary: #141413;
+    --text-secondary: rgba(20, 20, 19, 0.7);
+    --text-muted: rgba(20, 20, 19, 0.45);
+    --text-disabled: rgba(20, 20, 19, 0.25);
+
+    /* Accent colors - warm copper/amber inspired */
+    --accent-primary: #BF903C;
+    --accent-hover: #A67B2E;
+    --accent-light: #FAF5EB;
+    --accent-lighter: #FDF9F3;
+    --accent-secondary: #6B5B3E;
+
+    /* Semantic colors */
+    --success: #3D8C5C;
+    --success-light: #EDF7F0;
+    --warning: #C4841D;
+    --warning-light: #FDF6EA;
+    --error: #C13515;
+    --error-light: #FCEEE9;
+    --info: #4A7DA6;
+    --info-light: #EDF5FA;
+
+    /* Borders - warm subtle */
+    --border-primary: rgba(31, 30, 29, 0.15);
+    --border-secondary: rgba(31, 30, 29, 0.08);
+    --border-light: rgba(31, 30, 29, 0.05);
+
+    /* Shadows - extremely subtle */
+    --shadow-xs: 0 1px 2px 0 rgba(20, 20, 19, 0.03);
+    --shadow-sm: 0 1px 3px 0 rgba(20, 20, 19, 0.06), 0 1px 2px -1px rgba(20, 20, 19, 0.04);
+    --shadow-md: 0 4px 6px -1px rgba(20, 20, 19, 0.06), 0 2px 4px -2px rgba(20, 20, 19, 0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(20, 20, 19, 0.06), 0 4px 6px -4px rgba(20, 20, 19, 0.04);
+    --shadow-xl: 0 20px 25px -5px rgba(20, 20, 19, 0.08), 0 8px 10px -6px rgba(20, 20, 19, 0.04);
+
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+    --space-4xl: 96px;
+
+    /* Radius - Anthropic uses subtle rounding */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+    --radius-xl: 12px;
+    --radius-full: 9999px;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+
+  /* MedCHR Utility Classes */
+  .card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-md);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-xl);
+    box-shadow: var(--shadow-xs);
+    transition: box-shadow 200ms ease;
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+
+  .badge-success {
+    background: var(--success-light);
+    color: var(--success);
+    border: 1px solid color-mix(in srgb, var(--success) 20%, transparent);
+  }
+
+  .badge-warning {
+    background: var(--warning-light);
+    color: var(--warning);
+    border: 1px solid color-mix(in srgb, var(--warning) 20%, transparent);
+  }
+
+  .badge-error {
+    background: var(--error-light);
+    color: var(--error);
+    border: 1px solid color-mix(in srgb, var(--error) 20%, transparent);
+  }
+
+  .badge-neutral {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-secondary);
+  }
+
+  .badge-info {
+    background: var(--info-light);
+    color: var(--info);
+    border: 1px solid color-mix(in srgb, var(--info) 20%, transparent);
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+  }
+
+  .page-header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+  }
+
+  .page-header p {
+    margin: 4px 0 0 0;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+    margin-bottom: var(--space-2xl);
+  }
+
+  /* Responsive adjustment for stats */
+  @media (max-width: 1024px) {
+    .stats-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .stats-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .stat-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-md);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-xs);
+    transition: box-shadow var(--transition-base);
+  }
+
+  .stat-card:hover {
+    box-shadow: var(--shadow-sm);
+  }
+
+  .stat-card-value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: var(--space-xs);
+    letter-spacing: -0.02em;
+    font-family: var(--font-heading);
+  }
+
+  .stat-card-label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+
+  .search-bar {
+    position: relative;
+    margin-bottom: var(--space-lg);
+  }
+
+  .search-bar-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+  }
+
+  .search-bar input {
+    width: 100%;
+    padding: 12px 16px 12px 42px;
+    background: var(--bg-white);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-xs);
+  }
+
+  .search-bar input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(191, 144, 60, 0.1);
+  }
+
+  .search-bar input::placeholder {
+    color: var(--text-muted);
+  }
+
+  /* Patient Grid specific */
+  .patient-card {
+    display: block;
+    text-decoration: none;
+    background: var(--bg-white);
+    border: 1px solid var(--border-secondary);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    transition: all 200ms ease;
+    box-shadow: var(--shadow-xs);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .patient-card:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--border-primary);
+    transform: translateY(-2px);
+  }
+
+  .patient-card-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+
+  .patient-card-meta {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+  }
+
+  .patient-card-notes {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
