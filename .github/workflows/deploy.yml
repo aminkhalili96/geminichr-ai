@@ -6,12 +6,12 @@ on:
       - main
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_ID: sketch-ai-project
   REGION: asia-southeast1
   SERVICE: geminichr-ai
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     permissions:
@@ -27,9 +27,6 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
-          # Alternatively, use Workload Identity Federation:
-          # workload_identity_provider: "${{ secrets.WIF_PROVIDER }}"
-          # service_account: "${{ secrets.WIF_SERVICE_ACCOUNT }}"
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -40,10 +37,13 @@ jobs:
       - name: Build and Push Container
         run: |
           DOCKER_TAG=${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE }}:${{ github.sha }}
-          docker build -t $DOCKER_TAG .
+          docker build \
+            --build-arg GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }} \
+            -t $DOCKER_TAG .
           docker push $DOCKER_TAG
 
       - name: Deploy to Cloud Run
+        id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.SERVICE }}
@@ -51,3 +51,9 @@ jobs:
           image: ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/cloud-run-source-deploy/${{ env.SERVICE }}:${{ github.sha }}
           env_vars: |
             GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
+            NODE_ENV=production
+            NEXT_TELEMETRY_DISABLED=1
+          flags: --allow-unauthenticated --memory=1Gi --cpu=1 --port=3000
+
+      - name: Show Deployed URL
+        run: echo "Deployed to ${{ steps.deploy.outputs.url }}"
