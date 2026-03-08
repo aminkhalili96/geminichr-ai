@@ -18,7 +18,7 @@ export default function PatientReport({ params }: { params: { id: string } }) {
     const patientDate = "March 8, 2026"; // Current report date
 
     const handlePrint = useReactToPrint({
-        content: () => reportRef.current,
+        contentRef: reportRef,
         documentTitle: `MedCHR_Report_${patientName.replace(/ /g, "_")}_2026-03-08`,
     });
 
